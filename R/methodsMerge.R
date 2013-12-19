@@ -46,7 +46,7 @@ methodsCluster <- function(df, methodsName, overLapPer=0.8, numMethodsSup=2)
 
 
 methodsMerge <- function(breakdancer, pindel, cnvnator, 
-                         delly, svseq, others=NULL, overLapPer=0.8, numMethodsSup=2) 
+                         delly, svseq, others=NULL, overLapPer=0.8, numMethodsSup=1) 
 {
     ## collecting all deletions predicted by different methods
     DeletionList <- list(breakdancer$del, pindel$del, 

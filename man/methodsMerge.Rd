@@ -9,7 +9,7 @@
 }
 
 \usage{
-    methodsMerge(breakdancer, pindel, cnvnator, delly, svseq, others=NULL)
+    methodsMerge(breakdancer, pindel, cnvnator, delly, svseq, others=NULL, overLapPer = 0.8, numMethodsSup = 1)
 }
 
 \arguments{

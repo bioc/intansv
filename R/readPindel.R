@@ -33,34 +33,46 @@ readPindel <- function(dataDir=".", regSizeLowerCutoff=100,
 
     ## reading predicted deletions
     PindelDel <- lapply(PindelDelList, function(x){
-        PdPredDf <- read.table(x, fill=T, as.is=T)
-        PdPredDf <- PdPredDf[grepl("^\\d", PdPredDf$V1), ]
-        PdPredDf <- PdPredDf[, c(2, 3, 8, 10, 11, 13, 14, 16, 25)]
-        names(PdPredDf) <- c("SV_type", "SV_len", "chromosome", "BP_left", 
+        PdPredDf <- try(read.table(x, fill=T, as.is=T),sil=T)
+        if (is.data.frame(PdPredDf)) {
+            PdPredDf <- PdPredDf[grepl("^\\d", PdPredDf$V1), ]
+            PdPredDf <- PdPredDf[, c(2, 3, 8, 10, 11, 13, 14, 16, 25)]
+            names(PdPredDf) <- c("SV_type", "SV_len", "chromosome", "BP_left", 
                              "BP_right", "BP_range_left", "BP_range_right", 
                              "ReadPairSupport", "score")
+        } else {
+            PdPredDf <- NULL
+        }
         return(PdPredDf)
     })
 
     ## reading predicted inversions
     PindelInv <- lapply(PindelInvList, function(x){
-        PdPredDf <- read.table(x, fill=T, quote="", as.is=T)
-        PdPredDf <- PdPredDf[grepl("^\\d", PdPredDf$V1), ]
-        PdPredDf <- PdPredDf[, c(2, 3, 8, 10, 11, 13, 14, 16, 25)]
-        names(PdPredDf) <- c("SV_type", "SV_len", "chromosome", "BP_left", 
+        PdPredDf <- try(read.table(x, fill=T, quote="", as.is=T),sil=T)
+        if (is.data.frame(PdPredDf)) {
+            PdPredDf <- PdPredDf[grepl("^\\d", PdPredDf$V1), ]
+            PdPredDf <- PdPredDf[, c(2, 3, 8, 10, 11, 13, 14, 16, 25)]
+            names(PdPredDf) <- c("SV_type", "SV_len", "chromosome", "BP_left", 
                              "BP_right", "BP_range_left", "BP_range_right", 
                              "ReadPairSupport", "score")
+        } else {
+            PdPredDf <- NULL
+        }
         return(PdPredDf)
     })
 
     ## reading predicted tandom duplications
     PindelTd <- lapply(PindelTdList, function(x){
-        PdPredDf <- read.table(x, fill=T, as.is=T)
-        PdPredDf <- PdPredDf[grepl("^\\d", PdPredDf$V1), ]
-        PdPredDf <- PdPredDf[, c(2, 3, 8, 10, 11, 13, 14, 16, 25)]
-        names(PdPredDf) <- c("SV_type", "SV_len", "chromosome", "BP_left", 
+        PdPredDf <- try(read.table(x, fill=T, as.is=T),sil=T)
+        if (is.data.frame(PdPredDf)) {
+            PdPredDf <- PdPredDf[grepl("^\\d", PdPredDf$V1), ]
+            PdPredDf <- PdPredDf[, c(2, 3, 8, 10, 11, 13, 14, 16, 25)]
+            names(PdPredDf) <- c("SV_type", "SV_len", "chromosome", "BP_left", 
                              "BP_right", "BP_range_left", "BP_range_right", 
                              "ReadPairSupport", "score")
+        } else {
+            PdPredDf <- NULL
+        }
         return(PdPredDf)
     })
 
