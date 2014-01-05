@@ -6,22 +6,30 @@ readSvseq <- function(dataDir=".", regSizeLowerCutoff=100,
     SvseqDelList <- list.files(dataDir, full.names=T, pattern=".+\\.del$")
 
     SvseqDel <- lapply(SvseqDelList, function(x){
-        SvseqData <- read.table(x, comment.char=")", fill=T, as.is=T)
-        brk <- which(grepl("^#", SvseqData$V1))
-        brkTmp <- brk[2:length(brk)] - brk[1:(length(brk)-1)]
-        SvseqData <- SvseqData[1:(nrow(SvseqData)-1), ]
-        brkRes <- rep(1:length(brkTmp), brkTmp)
-        SvseqDataList <- split(SvseqData, brkRes)
+        SvseqData <- try(read.table(x, comment.char=")", fill=T, as.is=T),silent=T)
+        if (is.data.frame(SvseqData)) {
+            brk <- which(grepl("^#", SvseqData$V1))
+            if (length(brk)<2) {
+                return(NULL)
+            } else {
+                brkTmp <- brk[2:length(brk)] - brk[1:(length(brk)-1)]
+                SvseqData <- SvseqData[1:(nrow(SvseqData)-1), ]
+                brkRes <- rep(1:length(brkTmp), brkTmp)
+                SvseqDataList <- split(SvseqData, brkRes)
     
-        SvseqDataListDf <- lapply(SvseqDataList, function(df){
-            dfRes <- df[2, ]
-            dfRes$readsSupport <- nrow(df)-3
-            dfRes$V1 <- NULL
-            return(dfRes)
-        })
+                SvseqDataListDf <- lapply(SvseqDataList, function(df){
+                    dfRes <- df[2, ]
+                    dfRes$readsSupport <- nrow(df)-3
+                    dfRes$V1 <- NULL
+                    return(dfRes)
+                })
     
-        SvseqDataDf <- do.call(rbind, SvseqDataListDf)
-        return(SvseqDataDf);
+                SvseqDataDf <- do.call(rbind, SvseqDataListDf)
+                return(SvseqDataDf);
+            }
+        } else {
+            return(NULL)
+        }
     })
 
     SvseqDelDf <- do.call(rbind, SvseqDel)

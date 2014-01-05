@@ -1,3 +1,14 @@
+CHANGES IN VERSION 1.1.3
+------------------------
+
+Notes
+
+    o Modify readDelly and readSvseq to deal with
+      exceptions in the output of SV prediction programs.
+    o Add more parameters to the function 'methodsMerge' to 
+      make it more robust.
+
+
 CHANGES IN VERSION 1.1.2
 ------------------------
 

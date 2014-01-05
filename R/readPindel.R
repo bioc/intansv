@@ -33,7 +33,7 @@ readPindel <- function(dataDir=".", regSizeLowerCutoff=100,
 
     ## reading predicted deletions
     PindelDel <- lapply(PindelDelList, function(x){
-        PdPredDf <- try(read.table(x, fill=T, as.is=T),sil=T)
+        PdPredDf <- try(read.table(x, fill=T, as.is=T),silent=T)
         if (is.data.frame(PdPredDf)) {
             PdPredDf <- PdPredDf[grepl("^\\d", PdPredDf$V1), ]
             PdPredDf <- PdPredDf[, c(2, 3, 8, 10, 11, 13, 14, 16, 25)]
@@ -48,7 +48,7 @@ readPindel <- function(dataDir=".", regSizeLowerCutoff=100,
 
     ## reading predicted inversions
     PindelInv <- lapply(PindelInvList, function(x){
-        PdPredDf <- try(read.table(x, fill=T, quote="", as.is=T),sil=T)
+        PdPredDf <- try(read.table(x, fill=T, quote="", as.is=T),silent=T)
         if (is.data.frame(PdPredDf)) {
             PdPredDf <- PdPredDf[grepl("^\\d", PdPredDf$V1), ]
             PdPredDf <- PdPredDf[, c(2, 3, 8, 10, 11, 13, 14, 16, 25)]
@@ -63,7 +63,7 @@ readPindel <- function(dataDir=".", regSizeLowerCutoff=100,
 
     ## reading predicted tandom duplications
     PindelTd <- lapply(PindelTdList, function(x){
-        PdPredDf <- try(read.table(x, fill=T, as.is=T),sil=T)
+        PdPredDf <- try(read.table(x, fill=T, as.is=T),silent=T)
         if (is.data.frame(PdPredDf)) {
             PdPredDf <- PdPredDf[grepl("^\\d", PdPredDf$V1), ]
             PdPredDf <- PdPredDf[, c(2, 3, 8, 10, 11, 13, 14, 16, 25)]
@@ -92,44 +92,56 @@ readPindel <- function(dataDir=".", regSizeLowerCutoff=100,
                              PindelTdDf$ReadPairSupport>=readsSupport, ]
 
     ## filtering and merging deletions
-    PindelDelIrange <- GRanges(seqnames=PindelDelDf$chromosome, 
+    if (is.data.frame(PindelDelDf)) {
+        PindelDelIrange <- GRanges(seqnames=PindelDelDf$chromosome, 
                                ranges=IRanges(start=PindelDelDf$BP_left, 
                                               end=PindelDelDf$BP_right))
-    PindelDelIrangeRes <- findOverlaps(PindelDelIrange, reduce(PindelDelIrange))
-    PindelDelDf$clu <- subjectHits(PindelDelIrangeRes)
-    PindelDelDfFilMer <- ddply(PindelDelDf, ("clu"), PindelCluster)
+        PindelDelIrangeRes <- findOverlaps(PindelDelIrange, reduce(PindelDelIrange))
+        PindelDelDf$clu <- subjectHits(PindelDelIrangeRes)
+        PindelDelDfFilMer <- ddply(PindelDelDf, ("clu"), PindelCluster)
+        PindelDelDfFilMer <- PindelDelDfFilMer[, c(3:5, 2)]
+        names(PindelDelDfFilMer)[2:4] <- c("pos1", "pos2", "size")
+        PindelDelDfFilMer$size <- as.numeric(PindelDelDfFilMer$size)
+        PindelDelDfFilMer$pos1 <- as.numeric(PindelDelDfFilMer$pos1)
+        PindelDelDfFilMer$pos2 <- as.numeric(PindelDelDfFilMer$pos2)
+    } else {
+        PindelDelDfFilMer <- NULL
+    }
 
     ## filtering and merging inversions
-    PindelInvIrange <- GRanges(seqnames=PindelInvDf$chromosome, 
+    if (is.data.frame(PindelInvDf)) {
+        PindelInvIrange <- GRanges(seqnames=PindelInvDf$chromosome, 
                                ranges=IRanges(start=PindelInvDf$BP_left, 
                                               end=PindelInvDf$BP_right))
-    PindelInvIrangeRes <- findOverlaps(PindelInvIrange, reduce(PindelInvIrange))
-    PindelInvDf$clu <- subjectHits(PindelInvIrangeRes)
-    PindelInvDfFilMer <- ddply(PindelInvDf, ("clu"), PindelCluster)
+        PindelInvIrangeRes <- findOverlaps(PindelInvIrange, reduce(PindelInvIrange))
+        PindelInvDf$clu <- subjectHits(PindelInvIrangeRes)
+        PindelInvDfFilMer <- ddply(PindelInvDf, ("clu"), PindelCluster)
+        PindelInvDfFilMer <- PindelInvDfFilMer[, c(3:5, 2)]
+        names(PindelInvDfFilMer)[2:4] <- c("pos1", "pos2", "size")
+        PindelInvDfFilMer$size <- as.numeric(PindelInvDfFilMer$size)
+        PindelInvDfFilMer$pos1 <- as.numeric(PindelInvDfFilMer$pos1)
+        PindelInvDfFilMer$pos2 <- as.numeric(PindelInvDfFilMer$pos2)
+    } else {
+        PindelInvDfFilMer <- NULL
+    }
 
     ## filtering and merging tandom duplications
-    PindelTdIrange <- GRanges(seqnames=PindelTdDf$chromosome, 
+    if (is.data.frame(PindelTdDf)) {
+        PindelTdIrange <- GRanges(seqnames=PindelTdDf$chromosome, 
                               ranges=IRanges(start=PindelTdDf$BP_left, 
                                              end=PindelTdDf$BP_right))
-    PindelTdIrangeRes <- findOverlaps(PindelTdIrange, reduce(PindelTdIrange))
-    PindelTdDf$clu <- subjectHits(PindelTdIrangeRes)
-    PindelTdDfFilMer <- ddply(PindelTdDf, ("clu"), PindelCluster)
+        PindelTdIrangeRes <- findOverlaps(PindelTdIrange, reduce(PindelTdIrange))
+        PindelTdDf$clu <- subjectHits(PindelTdIrangeRes)
+        PindelTdDfFilMer <- ddply(PindelTdDf, ("clu"), PindelCluster)
+        PindelTdDfFilMer <- PindelTdDfFilMer[, c(3:5, 2)]
+        names(PindelTdDfFilMer)[2:4] <- c("pos1", "pos2", "size")
+        PindelTdDfFilMer$size <- as.numeric(PindelTdDfFilMer$size)
+        PindelTdDfFilMer$pos1 <- as.numeric(PindelTdDfFilMer$pos1)
+        PindelTdDfFilMer$pos2 <- as.numeric(PindelTdDfFilMer$pos2)
+    } else {
+        PindelTdDfFilMer <- NULL
+    }
 
-    PindelDelDfFilMer <- PindelDelDfFilMer[, c(3:5, 2)]
-    PindelInvDfFilMer <- PindelInvDfFilMer[, c(3:5, 2)]
-    PindelTdDfFilMer <- PindelTdDfFilMer[, c(3:5, 2)]
-    names(PindelDelDfFilMer)[2:4] <- c("pos1", "pos2", "size")
-    names(PindelInvDfFilMer)[2:4] <- c("pos1", "pos2", "size")
-    names(PindelTdDfFilMer)[2:4] <- c("pos1", "pos2", "size")
-    PindelDelDfFilMer$size <- as.numeric(PindelDelDfFilMer$size)
-    PindelDelDfFilMer$pos1 <- as.numeric(PindelDelDfFilMer$pos1)
-    PindelDelDfFilMer$pos2 <- as.numeric(PindelDelDfFilMer$pos2)
-    PindelInvDfFilMer$size <- as.numeric(PindelInvDfFilMer$size)
-    PindelInvDfFilMer$pos1 <- as.numeric(PindelInvDfFilMer$pos1)
-    PindelInvDfFilMer$pos2 <- as.numeric(PindelInvDfFilMer$pos2)
-    PindelTdDfFilMer$size <- as.numeric(PindelTdDfFilMer$size)
-    PindelTdDfFilMer$pos1 <- as.numeric(PindelTdDfFilMer$pos1)
-    PindelTdDfFilMer$pos2 <- as.numeric(PindelTdDfFilMer$pos2)
     return(list(del=PindelDelDfFilMer, inv=PindelInvDfFilMer, 
                 dup=PindelTdDfFilMer))
 }
