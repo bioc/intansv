@@ -27,13 +27,14 @@ breakDancerCluster <- function(df)
 }
 
 ## Reading in the predicted SVs given by breakDancer
-readBreakDancer <- function(breakDancer, scoreCutoff=60, readsSupport=3, 
-                            regSizeLowerCutoff=100, regSizeUpperCutoff=1000000)
+readBreakDancer <- function(file="", scoreCutoff=60, readsSupport=3, 
+                            regSizeLowerCutoff=100, regSizeUpperCutoff=1000000,
+                            method="BreakDancer", ...)
 {
     bdColClass <- c("character", "numeric", "NULL", "character", "numeric", 
                     "NULL", "character", "numeric", "numeric", "numeric", 
                     "NULL", "NULL")
-    bdPred <- read.table(breakDancer, colClasses=bdColClass)
+    bdPred <- read.table(file, colClasses=bdColClass, ...)
     bdPred <- bdPred[,1:8]
     names(bdPred) <- c("chr1", "pos1", "chr2", "pos2", "type", "size", 
                        "score", "ReadPairSupp")
@@ -82,5 +83,8 @@ readBreakDancer <- function(breakDancer, scoreCutoff=60, readsSupport=3,
         }
     }
 
-    return(list(del=bdDelFilMer, inv=bdInvFilMer))
+    retuRes <- list(del=bdDelFilMer, inv=bdInvFilMer)
+    attributes(retuRes) <- c(attributes(retuRes), list(method=method))
+    
+    return(retuRes);
 }

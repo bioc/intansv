@@ -25,7 +25,8 @@ PindelCluster <- function(df)
 
 ## Reading in the predicted SVs given by Pindel
 readPindel <- function(dataDir=".", regSizeLowerCutoff=100, 
-                       regSizeUpperCutoff=1000000, readsSupport=3) 
+                       regSizeUpperCutoff=1000000, readsSupport=3,
+                       method="Pindel") 
 {
     PindelDelList <- list.files(dataDir, full.names=T, pattern=".+_D$")
     PindelInvList <- list.files(dataDir, full.names=T, pattern=".+_INV$")
@@ -142,6 +143,9 @@ readPindel <- function(dataDir=".", regSizeLowerCutoff=100,
         PindelTdDfFilMer <- NULL
     }
 
-    return(list(del=PindelDelDfFilMer, inv=PindelInvDfFilMer, 
-                dup=PindelTdDfFilMer))
+    retuRes <- list(del=PindelDelDfFilMer, inv=PindelInvDfFilMer, 
+                dup=PindelTdDfFilMer)
+    attributes(retuRes) <- c(attributes(retuRes), list(method=method))
+    
+    return(retuRes);
 }

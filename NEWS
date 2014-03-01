@@ -1,3 +1,16 @@
+
+CHANGES IN VERSION 1.2.0
+------------------------
+
+Notes
+
+    o Add support to SV prediction programs Lumpy
+      and softSearch.
+    o Modify methodsMerge to make it more robust.
+    o Modify all the read functions to coordinate
+      methodsMerge.
+
+
 CHANGES IN VERSION 1.1.4
 ------------------------
 

@@ -4,7 +4,8 @@ importFrom( BiocGenerics, setdiff )
 export(
     methodsMerge, plotChromosome, plotRegion,
     readBreakDancer, readCnvnator, readDelly,
-    readPindel, readSvseq, svAnnotation, geneAnnotation
+    readPindel, readSvseq, svAnnotation, geneAnnotation,
+    readLumpy, readSoftSearch
 )
 
 

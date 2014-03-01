@@ -1,6 +1,6 @@
 
 ## Reading in the predicted SVs given by SVseq2
-readSvseq <- function(dataDir=".", regSizeLowerCutoff=100, 
+readSvseq <- function(dataDir=".", regSizeLowerCutoff=100, method="SVseq2",
                       regSizeUpperCutoff=1000000, readsSupport=3) 
 {
     SvseqDelList <- list.files(dataDir, full.names=T, pattern=".+\\.del$")
@@ -74,6 +74,9 @@ readSvseq <- function(dataDir=".", regSizeLowerCutoff=100,
     
     SvseqDelDfFilMer <- SvseqDelDfFilMer[, c(1, 9:11)]
     names(SvseqDelDfFilMer) <- c("chromosome", "pos1", "pos2", "size")
-    return(list(del=SvseqDelDfFilMer));
+    retuRes <- list(del=SvseqDelDfFilMer)
+    attributes(retuRes) <- c(attributes(retuRes), list(method=method))
+    
+    return(retuRes);
 }
 

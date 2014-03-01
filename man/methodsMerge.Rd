@@ -9,17 +9,13 @@
 }
 
 \usage{
-    methodsMerge(breakdancer, pindel, cnvnator, delly, svseq, others=NULL, 
+    methodsMerge(..., others=NULL, 
     overLapPerDel = 0.8, overLapPerDup = 0.8, overLapPerInv = 0.8,
     numMethodsSupDel = 2, numMethodsSupDup = 2, numMethodsSupInv = 2)
 }
 
 \arguments{
-    \item{breakdancer}{a list of structural variations predicted by BreakDancer.}
-    \item{pindel}{a list of structural variations predicted by Pindel.}
-    \item{cnvnator}{a list of structural variations predicted by CNVnator.}
-    \item{delly}{a list of structural variations predicted by DELLY.}
-    \item{svseq}{a list of structural variations predicted by SVseq2.}
+    \item{...}{results of different SVs predictions read in to R by intansv.}
     \item{others}{a data frame of structural variations predicted by other tools.}
     \item{overLapPerDel}{Deletions predicted by different methods that have reciprocal coordinate overlap larger than this threshold would be clustered together}
     \item{overLapPerDup}{Duplications predicted by different methods that have reciprocal coordinate overlap larger than this threshold would be clustered together}

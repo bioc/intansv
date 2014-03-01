@@ -26,7 +26,8 @@ dellyCluster <- function(df)
 
 ## Reading in the predicted SVs given by DELLY
 readDelly <- function(dataDir=".", regSizeLowerCutoff=100, 
-                      regSizeUpperCutoff=1000000, readsSupport=3) 
+                      regSizeUpperCutoff=1000000, readsSupport=3,
+                      method="DELLY") 
 {
     ## reading deletions
     dellyDelRpList <- list.files(dataDir, full.names=T, pattern=".+\\.del$")
@@ -308,6 +309,9 @@ readDelly <- function(dataDir=".", regSizeLowerCutoff=100,
         dellyInvDfFilMer <- NULL
     }
 
-    return(list(del=dellyDelDfFilMer, dup=dellyDupDfFilMer, 
-                inv=dellyInvDfFilMer))
+    retuRes <- list(del=dellyDelDfFilMer, dup=dellyDupDfFilMer, 
+                inv=dellyInvDfFilMer)
+    attributes(retuRes) <- c(attributes(retuRes), list(method=method))
+    
+    return(retuRes);
 }
