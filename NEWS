@@ -1,10 +1,10 @@
 
-CHANGES IN VERSION 1.7.1
+CHANGES IN VERSION 1.6.2
 ------------------------
 
 Notes
 
-    o Fixed a bug in svAnnotation.
+    o Add support for the newest SV programs.
 
 CHANGES IN VERSION 1.2.0
 ------------------------
